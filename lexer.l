@@ -7,8 +7,8 @@
 
   #include <iostream>
 	#include <string>
-	//#include "nodos.h"
-  //#include "parser.tab.h"
+	#include "nodos.h"
+  #include "parser.tab.h"
 
 	using namespace std;
 %}
@@ -18,19 +18,16 @@
 NUMN	-[0-9]+
 
 /* Números positivos */
-NUMP 	[0-9]
+NUMP 	[0-9]+
 
 /* Identificadores alfanuméricos */
-IDALFA	[a-zA-Z0-9_]+
-
-/*Rango de nuemros para el parametro del metodo */
-NUMRANGE [1-5]
+IDALFA	[a-zA-Z_]+
 
 
 %%
 "entero"	{
-            yylval.hilera = new string(yytext,yyleng);
-  		      return t_ENTERO;
+            yylval.hilera = new string(yytext, yyleng);
+            return t_ENTERO;
 	        }
 
 "imprimir" {
@@ -39,12 +36,7 @@ NUMRANGE [1-5]
 
 	         }
 
-"escanear" {
-          		yylval.hilera = new string(yytext,yyleng);
-          		return t_ESCANEAR;
-	         }
-
-  {IDALFA}+ {
+{IDALFA}+ {
               yylval.hilera = new string(yytext,yyleng);
     		      return t_ID;
    	        }
@@ -58,12 +50,6 @@ NUMRANGE [1-5]
               yylval.valores = atoi(yytext);
       		    return t_NUMNEG;
  	      }
-
-{NUMRANGE} {
-
-                yylval.valores = atoi(yyetxt);
-                return t_RANGE;
-           }
 
 "=" {
 

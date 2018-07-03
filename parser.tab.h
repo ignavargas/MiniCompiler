@@ -46,18 +46,17 @@ extern int yydebug;
   enum yytokentype
   {
     t_ID = 258,
-    t_RANGE = 259,
-    t_PARENTIZ = 260,
-    t_PARENTDE = 261,
-    t_ENTERO = 262,
-    t_IMPRIMIR = 263,
-    t_ESCANEAR = 264,
-    t_DOSPUNTOS = 265,
-    t_PUNTOCOMA = 266,
-    t_COMA = 267,
-    t_NUMPOS = 268,
-    t_NUMNEG = 269,
-    t_error_lexico = 270
+    t_PARENTIZ = 259,
+    t_PARENTDE = 260,
+    t_ENTERO = 261,
+    t_IMPRIMIR = 262,
+    t_IGUAL = 263,
+    t_DOSPUNTOS = 264,
+    t_PUNTOCOMA = 265,
+    t_COMA = 266,
+    t_NUMPOS = 267,
+    t_NUMNEG = 268,
+    t_error_lexico = 269
   };
 #endif
 
@@ -73,7 +72,7 @@ union YYSTYPE
     string* hilera;
     int valores;
 
-/*
+    /*
     Nodo * nodo;
     NodoInstruccion * instr;
     NodoControlador * contrl;
@@ -82,9 +81,13 @@ union YYSTYPE
     NodoVariable * var;
     NodoDeclaracionVar * declVariables;
 
+    NodoAsignacion * asign;
+
     NodoVarLocal * varLocal;
 
+    NodoExpresion * expr;
     NodoIdentificador * ident;
+    NodoEstructuraControl * EstrucCont;
 
     NodoDeclaracionFunc * declFunc;
 
@@ -93,11 +96,10 @@ union YYSTYPE
     parNI_NDV* declaFor;
 
 		std::vector< std::vector< NodoInstruccion* >* >* valArray;
+*/
 
-    */
 
-
-#line 101 "parser.tab.h" /* yacc.c:1909  */
+#line 103 "parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
