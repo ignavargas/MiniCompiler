@@ -16,71 +16,83 @@
 %option noyywrap yylineno
 /* Números negativos */
 NUMN	-[0-9]+
+
 /* Números positivos */
 NUMP 	[0-9]
+
 /* Identificadores alfanuméricos */
 IDALFA	[a-zA-Z0-9_]+
+
+/*Rango de nuemros para el parametro del metodo */
+NUMRANGE [1-5]
+
 
 %%
 "entero"	{
             yylval.hilera = new string(yytext,yyleng);
-  		      return t_entero;
+  		      return t_ENTERO;
 	        }
 
 "imprimir" {
           		yylval.hilera = new string(yytext,yyleng);
-          		return t_imprimir;
+          		return t_IMPRIMIR;
 
 	         }
 
 "escanear" {
           		yylval.hilera = new string(yytext,yyleng);
-          		return t_escanear;
+          		return t_ESCANEAR;
 	         }
 
   {IDALFA}+ {
               yylval.hilera = new string(yytext,yyleng);
-    		      return t_id;
+    		      return t_ID;
    	        }
 
 {NUMP}+ {
               yylval.valores = atoi(yytext);
-      		    return t_num_pos;
+      		    return t_NUMPOS;
  	      }
 
 {NUMN}+ {
               yylval.valores = atoi(yytext);
-      		    return t_num_neg;
+      		    return t_NUMNEG;
  	      }
+
+{NUMRANGE} {
+
+                yylval.valores = atoi(yyetxt);
+                return t_RANGE;
+           }
 
 "=" {
 
-		          return t_igual_a;
+		          return t_IGUAL;
 	  }
 
 "("	{
 
-		          return t_parent_iz;
+		          return t_PARENTIZ;
     }
 
 ")"	{
 
-		          return t_parent_de;
+		          return t_PARENTDE;
 	  }
 
 ":"	{
 
-		          return t_dos_puntos;
+		          return t_DOSPUNTOS;
 	  }
 
 ";"	{
 
-		          return t_punto_coma;
+		          return t_PUNTOCOMA;
 	  }
 
 ","	{
 
-		          return t_coma;
+		          return t_COMA;
 	  }
 
 [ \t\n]	;
