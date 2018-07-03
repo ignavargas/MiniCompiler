@@ -1277,7 +1277,7 @@ yyreduce:
 
   case 4:
 #line 103 "parser.y" /* yacc.c:1646  */
-    {cout<<"variable[]"<<endl;}
+    {cout<<"variable[]"; cout<< *(yyvsp[0].hilera)<< endl;}
 #line 1282 "parser.tab.c" /* yacc.c:1646  */
     break;
 

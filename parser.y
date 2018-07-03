@@ -100,7 +100,7 @@ program: method_call print_statements{cout<<"whole program"<<endl;}
 method_call: declaration_list t_IGUAL t_ID t_PARENTIZ t_NUMPOS t_PARENTDE t_PUNTOCOMA{cout<<"method call"<<endl;}
              ;
 
-declaration_list: t_ID{cout<<"variable[]"<<endl;}
+declaration_list: t_ID{cout<<"variable[]"; cout<< *$1<< endl;}
                   |t_ID t_COMA declaration_list{cout<<"variable{}"<<endl;}
                   ;
 
