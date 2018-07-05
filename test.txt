@@ -1,4 +1,4 @@
-prueba, Ynodse, Zfriends, k= func(15);
-imprimir: x;
-imprimir: y;
+k, p, x  = func(3);
+imprimir: p;
+imprimir: k;
 imprimir: x;

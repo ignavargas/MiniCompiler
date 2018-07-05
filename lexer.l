@@ -12,24 +12,15 @@
 
 	using namespace std;
 %}
-
 %option noyywrap yylineno
-/* Números negativos */
-NUMN	-[0-9]+
-
 /* Números positivos */
-NUMP 	[0-9]+
+NUM 	[1-5]
 
 /* Identificadores alfanuméricos */
 IDALFA	[a-zA-Z_]+
 
 
 %%
-"entero"	{
-            yylval.hilera = new string(yytext, yyleng);
-            return t_ENTERO;
-	        }
-
 "imprimir" {
           		yylval.hilera = new string(yytext,yyleng);
           		return t_IMPRIMIR;
@@ -41,14 +32,9 @@ IDALFA	[a-zA-Z_]+
     		      return t_ID;
    	        }
 
-{NUMP}+ {
+{NUM} {
               yylval.valores = atoi(yytext);
       		    return t_NUMPOS;
- 	      }
-
-{NUMN}+ {
-              yylval.valores = atoi(yytext);
-      		    return t_NUMNEG;
  	      }
 
 "=" {

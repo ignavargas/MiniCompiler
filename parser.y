@@ -13,7 +13,7 @@
 	int yylex();
 	void yyerror(const char * s);
 
-	//NodoControlador* programa;
+	Nodo* programa;
 
 	extern FILE *yyin;
   extern int yylineno;
@@ -25,87 +25,47 @@
     char* error;
     string* hilera;
     int valores;
-
-    /*
-    Nodo * nodo;
-    NodoInstruccion * instr;
-    NodoControlador * contrl;
-    NodoDeclaracion * declaracion;
-
-    NodoVariable * var;
-    NodoDeclaracionVar * declVariables;
-
-    NodoAsignacion * asign;
-
-    NodoVarLocal * varLocal;
-
-    NodoExpresion * expr;
-    NodoIdentificador * ident;
-    NodoEstructuraControl * EstrucCont;
-
-    NodoDeclaracionFunc * declFunc;
-
-    std::vector<NodoInstruccion*> * listaNI;
-    std::vector<NodoDeclaracion*> * listaND;
-    parNI_NDV* declaFor;
-
-		std::vector< std::vector< NodoInstruccion* >* >* valArray;
-*/
+    Nodo* nodo;
+		pair<string, int>* par;
+		vector<string>* listaDec;
+		vector<string>* print;
 
 }
 %error-verbose
-%type <valores> t_NUMPOS t_NUMNEG
-%type <hilera> t_ID t_ENTERO t_IMPRIMIR
+%type <valores> t_NUMPOS
+%type <hilera> t_ID t_IMPRIMIR
 %type <errores> t_error_lexico
 
 /** seccion para dar tipos a los no terminales de la gramatica **/
-/*
-%type <instr> exp_matem  idNum
-%type <instr> expBooleana expBool simpleExpBool t_parent_iz t_parent_de
-%type <instr> exp_Hilera
-%type <contrl> program statements
 
-%type <declaracion> tipo_param var_declaration func_declaration blocks
-%type <declaFor> declaracion_for
-
-%type <listaNI> declaration_body_ent declaration_body_str declaration_body_bll
-%type <listaNI> statements_block lista_elem param_input dim_Array nums
-%type <valArray> val_array
-
-%type <listaND> param
-%type <instr> iniciar_programa declaration_line_ent declaration_line_str declaration_line_bll
-%type <instr> id_init estruc_control
-%type <instr> llamado_funcion expr_impr
-%type <EstrucCont> tipo_if pero_si sino tipo_for tipo_while
-%type <instr> exp_cambio limite_for
-
-*/
-
+%type <nodo> program
+%type <listaDec> declaration_list
+%type <par> method
+%type <print> print_statements
 
 %token t_ID
 %token t_PARENTIZ "(" t_PARENTDE ")"
-%token t_ENTERO "entero"
 %token t_IMPRIMIR "imprimir"
 %token t_IGUAL "="
 %token t_DOSPUNTOS ":"
 %token t_PUNTOCOMA ";"
 %token t_COMA ","
-%token t_NUMPOS "Numero(+)" t_NUMNEG "Numero(-)"
+%token t_NUMPOS "Numero(+) : 1<= x <= 5"
 %token t_error_lexico
 %%
 
-program: method_call print_statements{cout<<"whole program"<<endl;}
+program: declaration_list t_IGUAL method print_statements{$$ = new Nodo; $$->listaDeclaracion = *$1; $$->funcion = *$3;$$->printValores = *$4;delete $4;delete $1; delete $3;programa = $$;}
          ;
 
-method_call: declaration_list t_IGUAL t_ID t_PARENTIZ t_NUMPOS t_PARENTDE t_PUNTOCOMA{cout<<"method call"<<endl;}
-             ;
+method: t_ID t_PARENTIZ t_NUMPOS t_PARENTDE t_PUNTOCOMA{$$ = new pair<string, int>; $$->first = *$1; $$->second = $3; delete $1;}
+				;
 
-declaration_list: t_ID{cout<<"variable[]"; cout<< *$1<< endl;}
-                  |t_ID t_COMA declaration_list{cout<<"variable{}"<<endl;}
+declaration_list: t_ID{$$ = new vector<string>; $$->push_back(*$1); delete $1;}
+                  |declaration_list t_COMA t_ID{$1->push_back(*$3); delete $3;}
                   ;
 
-print_statements: t_IMPRIMIR t_DOSPUNTOS t_ID t_PUNTOCOMA{cout<<"Print"<<endl;}
-                  |t_IMPRIMIR t_DOSPUNTOS t_ID t_PUNTOCOMA print_statements{cout<<"Print"<<endl;}
+print_statements: t_IMPRIMIR t_DOSPUNTOS t_ID t_PUNTOCOMA{$$ = new vector<string>; $$->push_back(*$3);delete $3;}
+                  |print_statements t_IMPRIMIR t_DOSPUNTOS t_ID t_PUNTOCOMA {$1->push_back(*$4); delete $4;}
                   ;
 
 
@@ -118,17 +78,33 @@ int main(int argc, char **argv){
 		yyin = stdin;
 
 
-cout<<endl;
-cout<<"___________________________________________________________"<<endl;
-cout<<endl;
-cout<< "****** Mini Compilador NACH - Examen Final ****************"<<endl;
-cout<< "Realizando analisis sintactico y semantico:..."<<endl;
+	cout<<endl;
+	cout<<"___________________________________________________________"<<endl;
+	cout<<endl;
+	cout<< "****** Mini Compilador NACH - Examen Final ****************"<<endl;
+	cout<< "Realizando analisis sintactico:..."<<endl;
 
-yyparse();
+	yyparse();
 
+	cout<<"sintaxis correcto!"<<endl;
+	cout<< "Realizando analisis semantico:..."<<endl;
+	if(programa->guardarDatos()){
 
+		if(programa->analisisSemantico()){
+
+			cout<<"el analisis semantico se realizo con exito!"<<endl;
+			cout<<"generando codigo..."<<endl;
+			programa->codeGen();
+			cout<< "codigo generado en asam_code.txt"<<endl;
+		}else{
+
+			cout<<"... terminando...."<<endl;
+		}
+	}else{
+
+		cout<<"ERROR: cantidad de par�metros asignados no coincide... \nterminando..."<<endl;
+	}
 }
-
 void yyerror(const char * s){
 
 	cout<< "ERROR" <<endl;
